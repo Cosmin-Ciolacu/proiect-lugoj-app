@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
+import { connect } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
 import Logo from "../../components/Logo";
 import Header from "../../components/Header";
@@ -7,9 +9,10 @@ import Button from "../../components/Button";
 import TextInput from "../../components/TextInput";
 import { theme } from "../../core/theme";
 import axiosInstance from "../../axios";
-import { emailValidator, passwordValidator, login } from "../../core/utils";
+import * as actionTypes from "../../store/actions/actions";
+import { emailValidator, passwordValidator } from "../../core/utils";
 
-const Login = ({ navigation }) => {
+const Login = (props) => {
   const [email, setEmail] = useState({ value: "", error: "" });
   const [password, setPassword] = useState({ value: "", error: "" });
 
@@ -42,13 +45,17 @@ const Login = ({ navigation }) => {
       return;
     }
     if (data.success && data.invalidData === false) {
+      props.setUser(data.token, data.accountType, data.username);
+      await AsyncStorage.setItem("accountType", data.accountType);
+      await AsyncStorage.setItem("username", data.username);
+      await AsyncStorage.setItem("token", data.token);
       Toast.show({
         text1: "Autentificare reusita!",
         type: "success",
         position: "bottom",
         visibilityTime: 2000,
       });
-      setTimeout(() => navigation.navigate("App"), 2300);
+      setTimeout(() => props.navigation.navigate("App"), 2300);
     }
     //navigation.navigate("Dashboard");
   };
@@ -124,4 +131,16 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setUser: (token, account, username) =>
+      dispatch({
+        type: actionTypes.SET_USER,
+        token: token,
+        accountType: account,
+        username: username,
+      }),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(Login);

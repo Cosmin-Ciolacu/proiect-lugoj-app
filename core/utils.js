@@ -1,4 +1,4 @@
-import * as axios from "../axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export const usernameValidator = (username) => {
   if (!username || username.length <= 0)
     return "Numele de utilizator nu poate fii gol";
@@ -24,10 +24,19 @@ export const nameValidator = (name) => {
   return "";
 };
 
-export const getLoginData = async (params) => {
-  const data = await axios.post("/auth/login", {
-    email: params.email,
-    password: params.password,
-  });
-  return data.data;
+/* export const LocalStorage = {
+  getItem: (key) => {
+    let value;
+    return AsyncStorage.getItem(key).then((val) => {
+       value = val;
+    });
+    //console.log(value);
+    // return value;
+  },
+  setItem: (key, value) => {
+    let result;
+    AsyncStorage.setItem(key, value).then((_) => (result = true));
+    return result;
+  },
 };
+ */

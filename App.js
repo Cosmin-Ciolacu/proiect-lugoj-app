@@ -1,17 +1,25 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import Toast from "react-native-toast-message";
+import { createStore, compose, applyMiddleware } from "redux";
+import { Provider } from "react-redux";
+import thunk from "redux-thunk";
+import reducer from "./store/reducer";
 import { StyleSheet, Text, View } from "react-native";
 import MainNavigation from "./navigations/MainNavigation";
 
-export default function App() {
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const store = createStore(reducer, composeEnhancers(applyMiddleware(thunk)));
+
+const App = () => {
   return (
-    <>
+    <Provider store={store}>
       <MainNavigation />
       <Toast ref={(ref) => Toast.setRef(ref)} />
-    </>
+    </Provider>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -21,3 +29,4 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+export default App;
