@@ -5,9 +5,10 @@ import { connect } from "react-redux";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import HomeAdmin from "../screens/Admin/HomeAdmin";
-import Home from "../screens/User/Home";
+import HomeUser from "../screens/User/HomeUser";
 import Add from "../screens/User/Add";
 import Details from "../screens/User/Details";
+import Add2 from "../screens/User/Add2";
 const Stack = createStackNavigator();
 
 const AppNavigation = (props) => {
@@ -15,21 +16,25 @@ const AppNavigation = (props) => {
   useEffect(() => {
     (async () => {
       const accountType = await AsyncStorage.getItem("accountType");
+      console.log(accountType);
       setAccountType(accountType);
     })();
   }, []);
-  return (
-    <Stack.Navigator>
-      {accountType === "user" && (
-        <>
-          <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen name="Add" component={Add} />
-          <Stack.Screen name="Details" component={Details} />
-        </>
-      )}
-      <Stack.Screen name="HomeAdmin" component={HomeAdmin} />
-    </Stack.Navigator>
-  );
+  let screens;
+  if (accountType && accountType === "user") {
+    screens = (
+      <>
+        <Stack.Screen name="HomeUser" component={HomeUser} />
+        <Stack.Screen name="Add" component={Add} />
+        <Stack.Screen name="Add2" component={Add2} />
+        <Stack.Screen name="Details" component={Details} />
+      </>
+    );
+  } else {
+    screens = <Stack.Screen name="HomeAdmin" component={HomeAdmin} />;
+  }
+
+  return <Stack.Navigator>{screens}</Stack.Navigator>;
 };
 
 /* const mapStateToProps = (state) => {

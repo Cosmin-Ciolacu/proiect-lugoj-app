@@ -95,7 +95,7 @@ const Login = (props) => {
 
       <View style={styles.row}>
         <Text style={styles.label}>Nu ai un cont? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+        <TouchableOpacity onPress={() => props.navigation.navigate("Register")}>
           <Text style={styles.link}>Inregistrare</Text>
         </TouchableOpacity>
       </View>
