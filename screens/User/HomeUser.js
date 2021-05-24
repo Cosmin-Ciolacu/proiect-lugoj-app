@@ -1,12 +1,89 @@
-import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { theme } from "../../core/theme";
 import PlusIcon from "../../components/PlusIcon";
+import axiosInstance from "../../axios";
+import LoadingScreen from "../../components/LoadingScreen";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import ProblemCard from "../../components/ProblemCard";
+import Button from "../../components/Button";
+
 const HomeUser = (props) => {
+  const [problems, setProblems] = useState([]);
+  const [loadingObject, setLoadingObject] = useState({
+    loading: false,
+    text: "",
+  });
+  const [skip, setSkip] = useState(0);
+  const [take] = useState(3);
+  const [showMore, setShowMore] = useState(true);
+  useEffect(() => {
+    (async () => {
+      setLoadingObject({
+        loading: true,
+        text: "Se incarca datele",
+      });
+      const res = await axiosInstance.get("/main/problems", {
+        headers: {
+          "auth-token": await AsyncStorage.getItem("token"),
+        },
+        params: {
+          skip: skip,
+          take: take,
+        },
+      });
+      const data = res.data;
+      console.log(res.data);
+      if (data.success === 1) {
+        setLoadingObject({
+          loading: false,
+          text: "",
+        });
+        if (data.problems.length === 0) {
+          setShowMore(false);
+          setLoadingObject({
+            loading: false,
+            text: "",
+          });
+          return;
+        }
+        setProblems((prev) => prev.concat(data.problems));
+      }
+    })();
+  }, [skip]);
+  const goToDetails = (problem) =>
+    props.navigation.navigate("Details", {
+      problem,
+    });
   return (
     <View style={styles.container}>
-      <Text>HomeUser</Text>
+      {loadingObject.loading && (
+        <LoadingScreen
+          loading={loadingObject.loading}
+          text={loadingObject.text}
+        />
+      )}
+      <ScrollView>
+        {problems.map((problem, i) => (
+          <ProblemCard goToDetails={goToDetails} problem={problem} key={i} />
+        ))}
+        {showMore && (
+          <Button
+            style={styles.saveBtn}
+            mode="contained"
+            onPress={() => setSkip((prev) => prev + 2)}
+          >
+            <Text>Vezi mai multe </Text>
+          </Button>
+        )}
+      </ScrollView>
       <TouchableOpacity
         onPress={() => props.navigation.navigate("Add")}
         style={styles.floatingButton}
@@ -21,9 +98,7 @@ export default HomeUser;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    padding: 15,
   },
   floatingButton: {
     justifyContent: "center",

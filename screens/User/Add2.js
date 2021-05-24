@@ -15,51 +15,50 @@ import Toast from "react-native-toast-message";
 import * as ImagePicker from "expo-image-picker";
 import MapView, { Marker } from "react-native-maps";
 import { TextInput } from "react-native-paper";
+import storage from "../../firebase/storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axiosInstance from "../../axios";
+import LoadingScreen from "../../components/LoadingScreen";
+//import fetch from "node-fetch";
 
-const Add2 = () => {
+const Add2 = (props) => {
+  const { category, subCategory } = props.route.params;
   const [location, setLocation] = useState(null);
   const [image, setImage] = useState(null);
   const [visible, setVisible] = useState(false);
+  const [observations, setObservations] = useState("");
+  const [loading, setLoading] = useState({
+    loading: false,
+    text: "",
+  });
   useEffect(() => {
-    (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        Toast.show({
-          text1: "Nu se poate lua locatia curenta",
-          type: "error",
-          position: "bottom",
-          visibilityTime: 2000,
-        });
-        return;
-      }
-      const location = await Location.getCurrentPositionAsync({});
-      console.log(location);
-      setLocation({
-        lat: location.coords.latitude,
-        lng: location.coords.longitude,
-      });
-    })();
+    (async () => {})();
   }, []);
-  const getCameraImage = async () => {
-    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+  const getLocation = async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
       Toast.show({
-        text1: "Nu se poate accesa galeria",
+        text1: "Nu se poate lua locatia curenta",
         type: "error",
         position: "bottom",
         visibilityTime: 2000,
       });
       return;
     }
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
+    setLoading({
+      loading: true,
+      text: "Se ia locatia",
     });
-
-    console.log(result);
-    setImage(result.uri);
+    const location = await Location.getCurrentPositionAsync({});
+    console.log(location);
+    setLocation({
+      lat: location.coords.latitude,
+      lng: location.coords.longitude,
+    });
+    setLoading({
+      loading: false,
+      text: "",
+    });
   };
 
   const getImage = async () => {
@@ -74,21 +73,133 @@ const Add2 = () => {
       return;
     }
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
-
-    console.log(result);
-    setImage(result.uri);
-    setVisible((prev) => !prev);
+    //console.log(result.base64);
+    //console.log(result);
+    uploadToFirebase(result.uri);
+    //const base64File = convertBlobToBase64(blob);
+    //setImage(imageURL);
+    //setVisible((prev) => !prev);
   };
-  const save = () => {
+
+  // convertBlobToBase64 = (blob) => Buffer.from(blob).toString("base64");
+
+  const uploadToFirebase = async (uri) => {
+    setLoading({
+      loading: true,
+      text: "Se incarca imaginea",
+    });
+    const res = await fetch(uri);
+    const blob = await res.blob();
+    const storageRef = storage.ref();
+    const username = await AsyncStorage.getItem("username");
+    const imageRef = storageRef.child(
+      `/images/img_${new Date().toDateString()}${username}`
+    );
+    imageRef.put(blob).on(
+      "state_changed",
+      (snap) => {
+        const progress = Math.round(
+          (snap.bytesTransferred / snap.totalBytes) * 100
+        );
+        //setProgress(progress);
+      },
+      (err) => console.log(err),
+      async () => {
+        const url = await imageRef.getDownloadURL();
+        setImage(url);
+        setLoading({
+          loading: false,
+          text: "",
+        });
+        //console.log(url);
+        //setFinalUrl(url);
+      }
+    );
+    /* const profilePhotosRef = storageRef.child(
+      `/profiles-photos/${props.user_id}-${file.name}`
+    );
+    profilePhotosRef.put(file).on(
+      "state_changed",
+      (snap) => {
+        const progress = Math.round(
+          (snap.bytesTransferred / snap.totalBytes) * 100
+        );
+        setProgress(progress);
+      },
+      (err) => console.log(err),
+      async () => {
+        const url = await profilePhotosRef.getDownloadURL();
+        setFinalUrl(url);
+      }
+    ); */
+  };
+  const save = async () => {
     //save to db
+    if (!image || !location) {
+      alert("adaugati locatie si imagine");
+      return;
+    }
+    setLoading({
+      loading: true,
+      text: "Se salveaza sesizarea",
+    });
+    const res = await axiosInstance.post(
+      "/main/add-problem",
+      {
+        category: category,
+        subCategory: subCategory,
+        lat: location.lat,
+        lng: location.lng,
+        image: image,
+        observations: observations,
+      },
+      {
+        headers: {
+          "auth-token": await AsyncStorage.getItem("token"),
+        },
+      }
+    );
+    setLoading({
+      loading: false,
+      text: "",
+    });
+    const data = res.data;
+    if (data.success && data.saved) {
+      Toast.show({
+        text1: "Sesizarea s-a salvat cu succes",
+        type: "success",
+        position: "bottom",
+        visibilityTime: 1200,
+      });
+      setTimeout(() => props.navigation.navigate("HomeUser"), 800);
+    }
   };
   return (
     <View style={styles.container}>
+      {loading.loading && (
+        <LoadingScreen loading={loading.loading} text={loading.text} />
+      )}
+      <View style={styles.buttons}>
+        <TouchableOpacity
+          onPress={() => getLocation()}
+          style={[styles.btnAdd, { backgroundColor: "black" }]}
+        >
+          <LocationIcon />
+          <Text style={styles.btnText}>Adauga locatia</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => getImage()}
+          style={[styles.btnAdd, { backgroundColor: "#60AFF6" }]}
+        >
+          <PhotoIcon />
+          <Text style={styles.btnText}>Adauga poza</Text>
+        </TouchableOpacity>
+      </View>
       {location != null && (
         <MapView
           style={styles.map}
@@ -104,34 +215,21 @@ const Add2 = () => {
           />
         </MapView>
       )}
-      <View style={styles.buttons}>
-        <TouchableOpacity
-          onPress={() => getCameraImage()}
-          style={[styles.btnAdd, { backgroundColor: "black" }]}
-        >
-          <LocationIcon />
-          <Text style={styles.btnText}>Fa o poza</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => getImage()}
-          style={[styles.btnAdd, { backgroundColor: "#60AFF6" }]}
-        >
-          <PhotoIcon />
-          <Text style={styles.btnText}>Adauga poza</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.obs}>
-        <TextInput
-          label="Observatii"
-          placeholder="Introduceti mai multe detalii"
-          multiline={true}
-        />
-      </View>
+
+      <TextInput
+        style={styles.input}
+        label="Observatii"
+        placeholder="Introduceti mai multe detalii"
+        //multiline={true}
+        onChangeText={(text) => setObservations(text)}
+      />
       <Button style={styles.saveBtn} mode="contained" onPress={() => save()}>
-        Salveaza sesizarea
+        <Text>Salveaza sesizarea</Text>
       </Button>
 
-      <Image source={{ uri: image }} style={{ width: 100, height: 100 }} />
+      {image && (
+        <Image source={{ uri: image }} style={{ width: 100, height: 100 }} />
+      )}
     </View>
   );
 };
@@ -142,6 +240,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
+    alignSelf: "flex-start",
     /* alignItems: "center", */
     justifyContent: "center",
   },
@@ -154,6 +253,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     position: "absolute",
     top: 0,
+    zIndex: 999,
   },
   btnAdd: {
     width: "50%",
@@ -173,15 +273,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
   },
-  obs: {
-    alignSelf: "flex-start",
-    width: "100%",
-    marginTop: "5%",
-    /* justifyContent: "center",
-    alignItems: "center", */
-  },
   saveBtn: {
     position: "absolute",
-    bottom: "10%",
+    bottom: "5%",
+  },
+  input: {
+    justifyContent: "flex-start",
+    height: 50,
   },
 });
