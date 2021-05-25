@@ -19,6 +19,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const Details = (props) => {
   const { problem } = props.route.params;
   const [isProblemVoted, setIsProblemVoted] = useState(false);
+  const [positiveVotes, setPositiveVotes] = useState(0);
+  const [negativeVotes, setNegativeVotes] = useState(0);
   useEffect(() => {
     (async () => {
       const res = await axiosInstance.get("/main/is-voted/" + problem.id, {
@@ -29,6 +31,8 @@ const Details = (props) => {
       const data = res.data;
       console.log(data);
       setIsProblemVoted(data.isProblemVoted);
+      setPositiveVotes(data.positiveVotes);
+      setNegativeVotes(data.negativeVotes);
     })();
   }, [isProblemVoted]);
   const sendVote = async (vote) => {
@@ -58,10 +62,16 @@ const Details = (props) => {
       <View style={styles.infos}>
         <Title>Categorie: {problem.category}</Title>
         <Title>Subcategorie: {problem.subCategory}</Title>
-        <Subheading>Sesizare facuta de: {problem.user?.username}</Subheading>
+        <Subheading>
+          Sesizare facuta de:{" "}
+          <Text style={{ fontWeight: "bold" }}>{problem.user?.username}</Text>
+        </Subheading>
         <Subheading>
           Sesizare facuta in data de:{" "}
-          {moment(problem.createdAt).format("DD MM YYYY hh:mm")}
+          <Text style={{ fontWeight: "bold" }}>
+            {" "}
+            {moment(problem.createdAt).format("DD MM YYYY hh:mm")}
+          </Text>
         </Subheading>
         <Subheading>Observatii:</Subheading>
         <Paragraph>{problem.observations}</Paragraph>
@@ -82,28 +92,28 @@ const Details = (props) => {
           </MapView>
         </View>
       </View>
-      {!isProblemVoted && (
-        <View style={styles.buttons}>
-          <TouchableOpacity
-            onPress={() => sendVote("Y")}
-            style={[
-              styles.floatingButton,
-              { backgroundColor: theme.colors.primary },
-            ]}
-          >
-            <DoneIcon />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => sendVote("N")}
-            style={[
-              styles.floatingButton,
-              { backgroundColor: theme.colors.primary },
-            ]}
-          >
-            <CloseIcon />
-          </TouchableOpacity>
-        </View>
-      )}
+      <View style={styles.buttons}>
+        <TouchableOpacity
+          onPress={() => sendVote("Y")}
+          style={[
+            styles.floatingButton,
+            { backgroundColor: theme.colors.primary },
+          ]}
+        >
+          <DoneIcon />
+          <Text style={styles.nrVotes}>{positiveVotes}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => sendVote("N")}
+          style={[
+            styles.floatingButton,
+            { backgroundColor: theme.colors.primary },
+          ]}
+        >
+          <CloseIcon />
+          <Text style={styles.nrVotes}>{negativeVotes}</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 };
@@ -142,8 +152,13 @@ const styles = StyleSheet.create({
   floatingButton: {
     justifyContent: "center",
     alignItems: "center",
+    flexDirection: "column",
     width: 60,
     height: 60,
     borderRadius: 30,
+  },
+  nrVotes: {
+    fontSize: 20,
+    color: "white",
   },
 });
