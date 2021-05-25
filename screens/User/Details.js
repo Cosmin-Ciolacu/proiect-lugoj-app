@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -18,6 +18,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Details = (props) => {
   const { problem } = props.route.params;
+  const [isProblemVoted, setIsProblemVoted] = useState(false);
+  useEffect(() => {
+    (async () => {
+      const res = await axiosInstance.get("/main/is-voted/" + problem.id, {
+        headers: {
+          "auth-token": await AsyncStorage.getItem("token"),
+        },
+      });
+      const data = res.data;
+      console.log(data);
+      setIsProblemVoted(data.isProblemVoted);
+    })();
+  }, [isProblemVoted]);
   const sendVote = async (vote) => {
     const res = await axiosInstance.post(
       "/main/vote",
@@ -33,7 +46,8 @@ const Details = (props) => {
     );
     const data = res.data;
     if (data.success === 1 && data.saved === 1) {
-      alert("ok");
+      //alert("ok");
+      setIsProblemVoted(1);
       return;
     }
     if (data.voted === 1) return;
@@ -68,26 +82,28 @@ const Details = (props) => {
           </MapView>
         </View>
       </View>
-      <View style={styles.buttons}>
-        <TouchableOpacity
-          onPress={() => sendVote("Y")}
-          style={[
-            styles.floatingButton,
-            { backgroundColor: theme.colors.primary },
-          ]}
-        >
-          <DoneIcon />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => sendVote("N")}
-          style={[
-            styles.floatingButton,
-            { backgroundColor: theme.colors.primary },
-          ]}
-        >
-          <CloseIcon />
-        </TouchableOpacity>
-      </View>
+      {!isProblemVoted && (
+        <View style={styles.buttons}>
+          <TouchableOpacity
+            onPress={() => sendVote("Y")}
+            style={[
+              styles.floatingButton,
+              { backgroundColor: theme.colors.primary },
+            ]}
+          >
+            <DoneIcon />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => sendVote("N")}
+            style={[
+              styles.floatingButton,
+              { backgroundColor: theme.colors.primary },
+            ]}
+          >
+            <CloseIcon />
+          </TouchableOpacity>
+        </View>
+      )}
     </ScrollView>
   );
 };

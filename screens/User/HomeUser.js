@@ -26,35 +26,39 @@ const HomeUser = (props) => {
   const [showMore, setShowMore] = useState(true);
   useEffect(() => {
     (async () => {
-      setLoadingObject({
-        loading: true,
-        text: "Se incarca datele",
-      });
-      const res = await axiosInstance.get("/main/problems", {
-        headers: {
-          "auth-token": await AsyncStorage.getItem("token"),
-        },
-        params: {
-          skip: skip,
-          take: take,
-        },
-      });
-      const data = res.data;
-      console.log(res.data);
-      if (data.success === 1) {
+      try {
         setLoadingObject({
-          loading: false,
-          text: "",
+          loading: true,
+          text: "Se incarca datele",
         });
-        if (data.problems.length === 0) {
-          setShowMore(false);
+        const res = await axiosInstance.get("/main/problems", {
+          headers: {
+            "auth-token": await AsyncStorage.getItem("token"),
+          },
+          params: {
+            skip: skip,
+            take: take,
+          },
+        });
+        const data = res.data;
+        console.log(res.data);
+        if (data.success === 1) {
           setLoadingObject({
             loading: false,
             text: "",
           });
-          return;
+          if (data.problems.length === 0) {
+            setShowMore(false);
+            setLoadingObject({
+              loading: false,
+              text: "",
+            });
+            return;
+          }
+          setProblems((prev) => prev.concat(data.problems));
         }
-        setProblems((prev) => prev.concat(data.problems));
+      } catch (error) {
+        console.log(error);
       }
     })();
   }, [skip]);
@@ -99,6 +103,8 @@ export default HomeUser;
 const styles = StyleSheet.create({
   container: {
     padding: 15,
+    width: "100%",
+    height: "100%",
   },
   floatingButton: {
     justifyContent: "center",

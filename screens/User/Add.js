@@ -32,6 +32,7 @@ const Add = (props) => {
 
   const list = categories.map((cat, i) => (
     <List.Accordion
+      key={i}
       style={styles.list}
       title={cat.name}
       onPress={() => selectCategory(cat.name, i)}
@@ -39,6 +40,7 @@ const Add = (props) => {
     >
       {cat.subCategories.map((el, i) => (
         <List.Item
+          key={i}
           onPress={() => selectSubCategory(el, i)}
           style={styles.listItem}
           title={el}

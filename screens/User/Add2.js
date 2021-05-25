@@ -148,6 +148,7 @@ const Add2 = (props) => {
       loading: true,
       text: "Se salveaza sesizarea",
     });
+    console.log(category);
     const res = await axiosInstance.post(
       "/main/add-problem",
       {
