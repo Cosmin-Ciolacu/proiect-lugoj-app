@@ -98,7 +98,7 @@ const Add2 = (props) => {
     const storageRef = storage.ref();
     const username = await AsyncStorage.getItem("username");
     const imageRef = storageRef.child(
-      `/images/img_${new Date().toDateString()}${username}`
+      `/images/img_${new Date().toString()}${username}`
     );
     imageRef.put(blob).on(
       "state_changed",
