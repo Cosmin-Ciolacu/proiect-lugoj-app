@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text } from "react-native";
 import { connect } from "react-redux";
 import { createStackNavigator } from "@react-navigation/stack";
-
+import Welcome from "../screens/User/Welcome";
 import HomeAdmin from "../screens/Admin/HomeAdmin";
 import HomeUser from "../screens/User/HomeUser";
 import Add from "../screens/User/Add";
@@ -24,6 +24,7 @@ const AppNavigation = (props) => {
   if (accountType && accountType === "user") {
     screens = (
       <>
+        <Stack.Screen name="Welcome" component={Welcome} />
         <Stack.Screen name="HomeUser" component={HomeUser} />
         <Stack.Screen name="Add" component={Add} />
         <Stack.Screen name="Add2" component={Add2} />

@@ -177,7 +177,7 @@ const Add2 = (props) => {
         position: "bottom",
         visibilityTime: 1200,
       });
-      setTimeout(() => props.navigation.navigate("HomeUser"), 800);
+      setTimeout(() => props.navigation.push("HomeUser"), 800);
     }
   };
   return (

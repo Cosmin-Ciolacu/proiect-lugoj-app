@@ -15,6 +15,7 @@ import CloseIcon from "../../components/CloseIcon";
 import { theme } from "../../core/theme";
 import axiosInstance from "../../axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Toast from "react-native-toast-message";
 
 const Details = (props) => {
   const { problem } = props.route.params;
@@ -54,7 +55,13 @@ const Details = (props) => {
       setIsProblemVoted(1);
       return;
     }
-    if (data.voted === 1) return;
+    if (data.voted === 1)
+      Toast.show({
+        text1: "Ai votat deja aceasta sesizare",
+        position: "bottom",
+        type: "error",
+        visibilityTime: 1200,
+      });
   };
   return (
     <ScrollView style={styles.container}>

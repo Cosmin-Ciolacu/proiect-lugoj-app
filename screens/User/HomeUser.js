@@ -61,7 +61,7 @@ const HomeUser = (props) => {
         console.log(error);
       }
     })();
-  }, [skip]);
+  }, [skip, props.navigation]);
   const goToDetails = (problem) =>
     props.navigation.navigate("Details", {
       problem,
