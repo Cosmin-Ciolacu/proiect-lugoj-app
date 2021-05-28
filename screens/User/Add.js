@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import { StyleSheet, Image, ScrollView } from "react-native";
 import categories from "../../core/categories";
 import { List } from "react-native-paper";
 
@@ -33,6 +33,8 @@ const Add = (props) => {
   const list = categories.map((cat, i) => (
     <List.Accordion
       key={i}
+      left={(props) => <Image source={cat.icon} style={styles.icon} />}
+      titleStyle={{ fontSize: 25 }}
       style={styles.list}
       title={cat.name}
       onPress={() => selectCategory(cat.name, i)}
@@ -67,8 +69,13 @@ const styles = StyleSheet.create({
   },
   list: {
     width: "100%",
+    fontSize: 50,
   },
   listItem: {
     marginLeft: 12,
+  },
+  icon: {
+    width: 25,
+    height: 25,
   },
 });

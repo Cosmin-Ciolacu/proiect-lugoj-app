@@ -6,6 +6,7 @@ const categories = [
       "Drum deteriorat",
       "Capac canalizare lipsă",
     ],
+    icon: require("../Images/intersection.png"),
   },
 
   {
@@ -16,6 +17,7 @@ const categories = [
       "Cabluri deteriorate sau căzute",
       "Altele-Iluminat",
     ],
+    icon: require("../Images/street-lamp-3.png"),
   },
 
   {
@@ -25,6 +27,7 @@ const categories = [
       "Deseuri abandonate",
       "Pubele neridicate",
     ],
+    icon: require("../Images/dump.png"),
   },
   {
     name: "Vandalism",
@@ -34,6 +37,7 @@ const categories = [
       "Stalpi de iluminat",
       "Banci",
     ],
+    icon: require("../Images/graffiti.png"),
   },
   {
     name: "Trafic auto,semne de circulație și parcări",
@@ -45,6 +49,7 @@ const categories = [
       "Vehicul abandonat",
       "Altele-Trafic auto",
     ],
+    icon: require("../Images/automobile.png"),
   },
   {
     name: "Parcuri și spații verzi",
@@ -57,6 +62,7 @@ const categories = [
       "Bănci deteriorate",
       "Altele-Spații verzi",
     ],
+    icon: require("../Images/park-2.png"),
   },
   {
     name: "Construcții",
@@ -65,6 +71,7 @@ const categories = [
       "Construcție periculoasă sau cu risc",
       "Altele-Construcții",
     ],
+    icon: require("../Images/crane.png"),
   },
   {
     name: "Angajați în serviciul public",
@@ -73,6 +80,7 @@ const categories = [
       "Personal-comportament neadecvat",
       "Altele-Angajați în serviciul public",
     ],
+    icon: require("../Images/businessman.png"),
   },
   {
     name: "Transport în comun",
@@ -84,6 +92,7 @@ const categories = [
       "Taxi-Lipsa tarifului afișat",
       "Altele-Transport în comun",
     ],
+    icon: require("../Images/tram.png"),
   },
   {
     name: "Animale în domeniul public",
@@ -92,6 +101,7 @@ const categories = [
       "Animal mort abandonat",
       "Altele-Animale pe domeniul public",
     ],
+    icon: require("../Images/dog.png"),
   },
   {
     name: "Utilități",
@@ -100,6 +110,7 @@ const categories = [
       "Defecte(țevi sparte,branșament gaz,canalizare,hidranți,etc)",
       "Altele-Utilități",
     ],
+    icon: require("../Images/water-tap.png"),
   },
   {
     name: "Fumatul în spații interzise",
@@ -110,11 +121,18 @@ const categories = [
       "Instituție de învățământ",
       "Altele-Fumat în spații interzise",
     ],
+    icon: require("../Images/cigarrete.png"),
   },
   {
     name: "Diverse",
     subCategories: ["Diverse"],
+    icon: require("../Images/settings.png"),
   },
 ];
 
 export default categories;
+
+export const getIconByCategoryName = (categoryName) => {
+  const category = categories.find((x) => x.name === categoryName);
+  return category.icon;
+};

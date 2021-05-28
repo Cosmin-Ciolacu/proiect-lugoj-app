@@ -16,12 +16,22 @@ import { theme } from "../../core/theme";
 import axiosInstance from "../../axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
+import Button from "../../components/Button";
 
 const Details = (props) => {
   const { problem } = props.route.params;
   const [isProblemVoted, setIsProblemVoted] = useState(false);
   const [positiveVotes, setPositiveVotes] = useState(0);
   const [negativeVotes, setNegativeVotes] = useState(0);
+  const [isAdmin, setIsAdmin] = useState(false);
+  useEffect(() => {
+    (async () => {
+      const accountType = await AsyncStorage.getItem("accountType");
+      if (accountType !== "user") {
+        setIsAdmin(true);
+      }
+    })();
+  }, []);
   useEffect(() => {
     (async () => {
       const res = await axiosInstance.get("/main/is-voted/" + problem.id, {
@@ -36,6 +46,27 @@ const Details = (props) => {
       setNegativeVotes(data.negativeVotes);
     })();
   }, [isProblemVoted]);
+  const updateStatus = async (status) => {
+    const res = await axiosInstance.put(
+      `/main/update-status/${problem.id}/${status}`,
+      null,
+      {
+        headers: {
+          "auth-token": await AsyncStorage.getItem("token"),
+        },
+      }
+    );
+    const data = res.data;
+    //console.log(data);
+    if (data.updated)
+      alert(
+        `Ai setat problema cu statusul: ${
+          status === "IN_PROGRESS"
+            ? "Problema este in lucru"
+            : "Problema este rezolvata"
+        }`
+      );
+  };
   const sendVote = async (vote) => {
     const res = await axiosInstance.post(
       "/main/vote",
@@ -99,6 +130,26 @@ const Details = (props) => {
           </MapView>
         </View>
       </View>
+      {isAdmin && (
+        <>
+          <Button
+            //style={styles.saveBtn}
+            mode="contained"
+            onPress={() => updateStatus("DONE")}
+            //onPress={() => setSkip((prev) => prev + 2)}
+          >
+            <Text>Problema este rezolvata </Text>
+          </Button>
+          <Button
+            //style={styles.saveBtn}
+            mode="contained"
+            onPress={() => updateStatus("IN_PROGRESS")}
+            //onPress={() => setSkip((prev) => prev + 2)}
+          >
+            <Text>Problema este in lucru </Text>
+          </Button>
+        </>
+      )}
       <View style={styles.buttons}>
         <TouchableOpacity
           onPress={() => sendVote("Y")}

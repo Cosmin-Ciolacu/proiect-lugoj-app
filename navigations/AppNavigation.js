@@ -9,10 +9,17 @@ import HomeUser from "../screens/User/HomeUser";
 import Add from "../screens/User/Add";
 import Details from "../screens/User/Details";
 import Add2 from "../screens/User/Add2";
+import Map from "../screens/User/Map";
 const Stack = createStackNavigator();
 
 const AppNavigation = (props) => {
-  const [accountType, setAccountType] = useState("");
+  /* useEffect(() => {
+    (async () => {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) props.navigation.push("Home");
+    })();
+  }, []); */
+  /* const [accountType, setAccountType] = useState("");
   useEffect(() => {
     (async () => {
       const accountType = await AsyncStorage.getItem("accountType");
@@ -33,9 +40,18 @@ const AppNavigation = (props) => {
     );
   } else {
     screens = <Stack.Screen name="HomeAdmin" component={HomeAdmin} />;
-  }
+  } */
 
-  return <Stack.Navigator>{screens}</Stack.Navigator>;
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Welcome" component={Welcome} />
+      <Stack.Screen name="Map" component={Map} />
+      <Stack.Screen name="HomeUser" component={HomeUser} />
+      <Stack.Screen name="Add" component={Add} />
+      <Stack.Screen name="Add2" component={Add2} />
+      <Stack.Screen name="Details" component={Details} />
+    </Stack.Navigator>
+  );
 };
 
 /* const mapStateToProps = (state) => {

@@ -117,7 +117,8 @@ const Register = ({ navigation }) => {
             setAccountType({ value: itemValue, error: "" })
           }
         >
-          <Picker.Item label="Admin" value="Admin" />
+          <Picker.Item label="Selecteaza" value="" />
+          <Picker.Item label="Admin" value="admin" />
           <Picker.Item label="Utilizator" value="user" />
         </Picker>
       </View>
