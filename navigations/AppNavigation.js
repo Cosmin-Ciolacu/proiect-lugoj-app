@@ -10,6 +10,7 @@ import Add from "../screens/User/Add";
 import Details from "../screens/User/Details";
 import Add2 from "../screens/User/Add2";
 import Map from "../screens/User/Map";
+import MyProblems from "../screens/User/MyProblems";
 const Stack = createStackNavigator();
 
 const AppNavigation = (props) => {
@@ -47,6 +48,7 @@ const AppNavigation = (props) => {
       <Stack.Screen name="Welcome" component={Welcome} />
       <Stack.Screen name="Map" component={Map} />
       <Stack.Screen name="HomeUser" component={HomeUser} />
+      <Stack.Screen name="MyProblems" component={MyProblems} />
       <Stack.Screen name="Add" component={Add} />
       <Stack.Screen name="Add2" component={Add2} />
       <Stack.Screen name="Details" component={Details} />

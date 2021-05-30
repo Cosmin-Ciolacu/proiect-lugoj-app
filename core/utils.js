@@ -40,3 +40,17 @@ export const nameValidator = (name) => {
   },
 };
  */
+
+export const convertStatus = (status) => {
+  switch (status) {
+    case "VERIFYING": {
+      return "Sesizare in curs de verificare";
+    }
+    case "IN_PROGRESS": {
+      return "Sesizare in lucru";
+    }
+    case "DONE": {
+      return "Sesizare rezolvata";
+    }
+  }
+};

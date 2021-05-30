@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ScrollView,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FlatGrid } from "react-native-super-grid";
 import { theme } from "../../core/theme";
@@ -24,7 +31,7 @@ const Welcome = (props) => {
     {
       text: "Sesizarile mele",
       icon: require("../../Images/profile.png"),
-      pressFn: () => console.log("sesizarile mele "),
+      pressFn: () => props.navigation.navigate("MyProblems"),
     },
     {
       text: "Ajutor",
@@ -51,7 +58,7 @@ const Welcome = (props) => {
     })();
   }, []);
   return (
-    <View style={{ backgroundColor: "white" }}>
+    <ScrollView style={{ backgroundColor: "white" }}>
       <View
         style={{
           marginTop: 60,
@@ -87,7 +94,7 @@ const Welcome = (props) => {
           </TouchableOpacity>
         )}
       />
-    </View>
+    </ScrollView>
   );
 };
 
