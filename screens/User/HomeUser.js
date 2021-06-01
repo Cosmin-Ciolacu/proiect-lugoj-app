@@ -14,6 +14,8 @@ import LoadingScreen from "../../components/LoadingScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProblemCard from "../../components/ProblemCard";
 import Button from "../../components/Button";
+import RNPickerSelect from "react-native-picker-select";
+import categories from "../../core/categories";
 
 const HomeUser = (props) => {
   const [problems, setProblems] = useState([]);
@@ -24,6 +26,7 @@ const HomeUser = (props) => {
   const [skip, setSkip] = useState(0);
   const [take] = useState(3);
   const [showMore, setShowMore] = useState(true);
+  const [category, setCategory] = useState("");
   useEffect(() => {
     (async () => {
       try {
@@ -38,6 +41,7 @@ const HomeUser = (props) => {
           params: {
             skip: skip,
             take: take,
+            category: category,
           },
         });
         const data = res.data;
@@ -61,7 +65,7 @@ const HomeUser = (props) => {
         console.log(error);
       }
     })();
-  }, [skip, props.navigation]);
+  }, [skip, category]);
   const goToDetails = (problem) =>
     props.navigation.navigate("Details", {
       problem,
@@ -74,10 +78,39 @@ const HomeUser = (props) => {
           text={loadingObject.text}
         />
       )}
+      <RNPickerSelect
+        style={{ ...pickerStyles }}
+        placeholder="Selecteaza categorie"
+        value={category}
+        onValueChange={(category) => {
+          setProblems([]);
+          setCategory(category);
+        }}
+        items={[
+          {
+            label: "Selecteaza categoria",
+            value: "",
+          },
+          ...categories.map((category) => {
+            return {
+              label: category.name,
+              value: category.name,
+            };
+          }),
+        ]}
+      />
       <ScrollView>
-        {problems.map((problem, i) => (
-          <ProblemCard goToDetails={goToDetails} problem={problem} key={i} />
-        ))}
+        {problems.length > 0 ? (
+          problems.map((problem, i) => (
+            <ProblemCard goToDetails={goToDetails} problem={problem} key={i} />
+          ))
+        ) : (
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            <Text style={{ fontSize: 25 }}>Nu exista sesizari</Text>
+          </View>
+        )}
         {showMore && (
           <Button
             style={styles.saveBtn}
@@ -88,12 +121,12 @@ const HomeUser = (props) => {
           </Button>
         )}
       </ScrollView>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => props.navigation.navigate("Add")}
         style={styles.floatingButton}
       >
         <PlusIcon />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };
@@ -117,5 +150,22 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 10,
     right: 10,
+  },
+});
+
+const pickerStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 20,
+    textAlign: "center",
+    backgroundColor: theme.colors.primary,
+    color: "white",
+    height: 50,
+  },
+  inputAndroid: {
+    fontSize: 20,
+    textAlign: "center",
+    backgroundColor: theme.colors.primary,
+    color: "white",
+    height: 50,
   },
 });

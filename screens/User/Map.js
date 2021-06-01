@@ -6,8 +6,9 @@ import LoadingScreen from "../../components/LoadingScreen";
 import MapView, { Marker } from "react-native-maps";
 import { getIconByCategoryName } from "../../core/categories";
 import * as Location from "expo-location";
+import { getColorByStatus } from "../../core/categories";
 
-const Map = () => {
+const Map = (props) => {
   const [locations, setLocations] = useState([]);
   const [loadingObject, setLoadingObject] = useState({
     loading: false,
@@ -43,6 +44,7 @@ const Map = () => {
         lat: location.coords.latitude,
         lng: location.coords.longitude,
       });
+
       //console.log(locations);
       setLocations(locations);
       setLoadingObject({
@@ -75,11 +77,18 @@ const Map = () => {
                 latitude: loc.lat,
                 longitude: loc.lng,
               }}
+              pinColor={getColorByStatus(loc.status, loc.category)}
+              onPress={() =>
+                props.navigation.navigate("Details", {
+                  problem: loc,
+                })
+              }
+              //image={() => getIconByCategoryName(loc.category)}
             >
-              <Image
+              {/* <Image
                 source={getIconByCategoryName(loc.category)}
                 style={{ with: 25, height: 25 }}
-              />
+              /> */}
             </Marker>
           ))}
         </MapView>

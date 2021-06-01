@@ -17,6 +17,8 @@ import axiosInstance from "../../axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
 import Button from "../../components/Button";
+import { getColorByStatus } from "../../core/categories";
+import { convertStatus } from "../../core/utils";
 
 const Details = (props) => {
   const { problem } = props.route.params;
@@ -100,6 +102,12 @@ const Details = (props) => {
       <View style={styles.infos}>
         <Title>Categorie: {problem.category}</Title>
         <Title>Subcategorie: {problem.subCategory}</Title>
+        <Title>
+          Status:{" "}
+          <Title style={{ color: getColorByStatus(problem.status) }}>
+            {convertStatus(problem.status)}
+          </Title>
+        </Title>
         <Subheading>
           Sesizare facuta de:{" "}
           <Text style={{ fontWeight: "bold" }}>{problem.user?.username}</Text>

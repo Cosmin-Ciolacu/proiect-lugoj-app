@@ -7,6 +7,7 @@ const categories = [
       "Capac canalizare lipsă",
     ],
     icon: require("../Images/intersection.png"),
+    pinColor: "#32314b",
   },
 
   {
@@ -18,6 +19,7 @@ const categories = [
       "Altele-Iluminat",
     ],
     icon: require("../Images/street-lamp-3.png"),
+    pinColor: "#d5a40f",
   },
 
   {
@@ -28,6 +30,7 @@ const categories = [
       "Pubele neridicate",
     ],
     icon: require("../Images/dump.png"),
+    pinColor: "#aad7e4",
   },
   {
     name: "Vandalism",
@@ -38,6 +41,7 @@ const categories = [
       "Banci",
     ],
     icon: require("../Images/graffiti.png"),
+    pinColor: "#e61b62",
   },
   {
     name: "Trafic auto,semne de circulație și parcări",
@@ -50,6 +54,7 @@ const categories = [
       "Altele-Trafic auto",
     ],
     icon: require("../Images/automobile.png"),
+    pinColor: "#a6abbb",
   },
   {
     name: "Parcuri și spații verzi",
@@ -63,6 +68,7 @@ const categories = [
       "Altele-Spații verzi",
     ],
     icon: require("../Images/park-2.png"),
+    pinColor: "#c2cd7c",
   },
   {
     name: "Construcții",
@@ -72,6 +78,7 @@ const categories = [
       "Altele-Construcții",
     ],
     icon: require("../Images/crane.png"),
+    pinColor: "#fccc54",
   },
   {
     name: "Angajați în serviciul public",
@@ -81,6 +88,7 @@ const categories = [
       "Altele-Angajați în serviciul public",
     ],
     icon: require("../Images/businessman.png"),
+    pinColor: "#246399",
   },
   {
     name: "Transport în comun",
@@ -93,6 +101,7 @@ const categories = [
       "Altele-Transport în comun",
     ],
     icon: require("../Images/tram.png"),
+    pinColor: "#f25948",
   },
   {
     name: "Animale în domeniul public",
@@ -102,6 +111,7 @@ const categories = [
       "Altele-Animale pe domeniul public",
     ],
     icon: require("../Images/dog.png"),
+    pinColor: "#eba353",
   },
   {
     name: "Utilități",
@@ -111,6 +121,7 @@ const categories = [
       "Altele-Utilități",
     ],
     icon: require("../Images/water-tap.png"),
+    pinColor: "#5a575d",
   },
   {
     name: "Fumatul în spații interzise",
@@ -122,17 +133,36 @@ const categories = [
       "Altele-Fumat în spații interzise",
     ],
     icon: require("../Images/cigarrete.png"),
+    pinColor: "#fb9353",
   },
   {
     name: "Diverse",
     subCategories: ["Diverse"],
     icon: require("../Images/settings.png"),
+    pinColor: "#349c8c",
   },
 ];
+
+const getColorByCategory = (name) => {
+  const category = categories.find((x) => x.name === name);
+  return category.pinColor;
+};
 
 export default categories;
 
 export const getIconByCategoryName = (categoryName) => {
   const category = categories.find((x) => x.name === categoryName);
   return category.icon;
+};
+
+export const getColorByStatus = (status, categoryName = null) => {
+  switch (status) {
+    case "DONE": {
+      return "green";
+    }
+    default: {
+      if (categoryName) return getColorByCategory(categoryName);
+      return "red";
+    }
+  }
 };

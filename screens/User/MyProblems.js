@@ -4,9 +4,10 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
-  Picker,
   StyleSheet,
+  Platform,
 } from "react-native";
+import RNPickerSelect from "react-native-picker-select";
 import { Ionicons } from "@expo/vector-icons";
 import { theme } from "../../core/theme";
 import PlusIcon from "../../components/PlusIcon";
@@ -74,11 +75,11 @@ const MyProblems = () => {
     });
   return (
     <View>
-      <View style={styles.pickerView}>
-        <Picker
+      {/*  <Picker
           style={{ height: 50, width: 150 }}
           onValueChange={(value) => setStatus(value)}
           selectedValue={status}
+          itemStyle={{ height: 50 }}
         >
           <Picker.Item label="Selecteaza" value="" />
           <Picker.Item
@@ -87,8 +88,19 @@ const MyProblems = () => {
           />
           <Picker.Item label="Sesizari in lucru" value="IN_PROGRESS" />
           <Picker.Item label="Sesizari rezolvate" value="DONE" />
-        </Picker>
-      </View>
+        </Picker> */}
+      {/*<Text>Selecteaza statusul </Text>*/}
+      <RNPickerSelect
+        //style={{ fontSize: 20, textAlign: "center" }}
+        style={{ ...pickerStyles }}
+        placeholder={{}}
+        onValueChange={(status) => setStatus(status)}
+        items={[
+          { label: "Sesizari in curs de verificare", value: "VERIFYING" },
+          { label: "Sesizari in lucru", value: "IN_PROGRESS" },
+          { label: "Sesizari rezolvate", value: "DONE" },
+        ]}
+      />
       {loadingObject.loading && (
         <LoadingScreen
           loading={loadingObject.loading}
@@ -123,9 +135,27 @@ const MyProblems = () => {
 const styles = StyleSheet.create({
   pickerView: {
     width: "100%",
+
     justifyContent: "center",
     alignItems: "center",
-    flexDirection: "column",
+    flexDirection: "row",
+  },
+});
+
+const pickerStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 20,
+    textAlign: "center",
+    backgroundColor: theme.colors.primary,
+    color: "white",
+    height: 50,
+  },
+  inputAndroid: {
+    fontSize: 20,
+    textAlign: "center",
+    backgroundColor: theme.colors.primary,
+    color: "white",
+    height: 50,
   },
 });
 export default MyProblems;

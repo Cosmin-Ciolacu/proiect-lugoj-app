@@ -4,9 +4,10 @@ import {
   StyleSheet,
   Text,
   View,
-  Picker,
   Alert,
+  Platform,
 } from "react-native";
+import { Picker, PickerIOS } from "@react-native-picker/picker";
 import Toast from "react-native-toast-message";
 import Logo from "../../components/Logo";
 import Header from "../../components/Header";
@@ -110,17 +111,31 @@ const Register = ({ navigation }) => {
         }}
       >
         <Text style={{ marginBottom: 12 }}>Tip cont:</Text>
-        <Picker
-          selectedValue={accountType.value}
-          style={{ height: 50, width: 150 }}
-          onValueChange={(itemValue, itemIndex) =>
-            setAccountType({ value: itemValue, error: "" })
-          }
-        >
-          <Picker.Item label="Selecteaza" value="" />
-          <Picker.Item label="Admin" value="admin" />
-          <Picker.Item label="Utilizator" value="user" />
-        </Picker>
+        {Platform.OS === "android" ? (
+          <Picker
+            selectedValue={accountType.value}
+            style={{ height: 50, width: 150 }}
+            onValueChange={(itemValue, itemIndex) =>
+              setAccountType({ value: itemValue, error: "" })
+            }
+          >
+            <Picker.Item label="Selecteaza" value="" />
+            <Picker.Item label="Admin" value="admin" />
+            <Picker.Item label="Utilizator" value="user" />
+          </Picker>
+        ) : (
+          <PickerIOS
+            selectedValue={accountType.value}
+            style={{ height: 50, width: 150 }}
+            onValueChange={(itemValue, itemIndex) =>
+              setAccountType({ value: itemValue, error: "" })
+            }
+          >
+            <Picker.Item label="Selecteaza" value="" />
+            <Picker.Item label="Admin" value="admin" />
+            <Picker.Item label="Utilizator" value="user" />
+          </PickerIOS>
+        )}
       </View>
 
       <Button mode="contained" onPress={register}>

@@ -1,4 +1,4 @@
-import React from "react";
+/* import React from "react";
 import { View, Text, StyleSheet, ImageBackground } from "react-native";
 import { Button } from "react-native-paper";
 
@@ -84,3 +84,39 @@ const styles = StyleSheet.create({
     width: "80%",
   },
 });
+ */
+
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import Logo from "../../components/Logo";
+import Header from "../../components/Header";
+import Button from "../../components/Button";
+
+const Home = ({ navigation }) => {
+  return (
+    <View style={styles.container}>
+      <Logo />
+      <Header>Report Lugoj</Header>
+      <Button mode="contained" onPress={() => navigation.navigate("Login")}>
+        AUTENTIFICARE
+      </Button>
+      <Button mode="outlined" onPress={() => navigation.navigate("Register")}>
+        CREARE CONT
+      </Button>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    width: "100%",
+    maxWidth: 340,
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
+
+export default Home;
