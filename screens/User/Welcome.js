@@ -49,9 +49,19 @@ const Welcome = (props) => {
   ]);
   useEffect(() => {
     (async () => {
-      if ((await AsyncStorage.getItem("token")) === null) {
+      /*  if ((await AsyncStorage.getItem("token")) === null) {
         props.navigation.navigate("Home");
         return;
+      } */
+      const accountType = await AsyncStorage.getItem("accontTipe");
+      if (accountType !== "user") {
+        const newArray = [...items];
+        newArray.splice(4, 0, {
+          text: "Statistici",
+          icon: require("../../Images/pie-chart.png"),
+          pressFn: () => props.navigation.navigate("Stats"),
+        });
+        setItems(newArray);
       }
       const username = await AsyncStorage.getItem("username");
       setUsername(username);

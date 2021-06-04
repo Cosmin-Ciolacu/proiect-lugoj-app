@@ -155,6 +155,8 @@ export const getIconByCategoryName = (categoryName) => {
   return category.icon;
 };
 
+export const categoriesNames = categories.map((c) => c.name);
+
 export const getColorByStatus = (status, categoryName = null) => {
   switch (status) {
     case "DONE": {
