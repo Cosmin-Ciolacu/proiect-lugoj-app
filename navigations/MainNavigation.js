@@ -15,6 +15,7 @@ import Add2 from "../screens/User/Add2";
 import Map from "../screens/User/Map";
 
 import AppNavigation from "./AppNavigation";
+import Stats from "../screens/User/Stats";
 
 const Stack = createStackNavigator();
 
@@ -49,15 +50,36 @@ const MainNavigation = (props) => {
   return (
     <NavigationContainer>
       {/*  {screens} */}
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {token === null && (
+      <Stack.Navigator>
+        {/* {token === null && (
           <>
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Register" component={Register} />
           </>
-        )}
-        <Stack.Screen name="App" component={AppNavigation} />
+        )} */}
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Home"
+          component={Home}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Login"
+          component={Login}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Register"
+          component={Register}
+        />
+        <Stack.Screen name="Welcome" component={Welcome} />
+        <Stack.Screen name="Map" component={Map} />
+        <Stack.Screen name="HomeUser" component={HomeUser} />
+        <Stack.Screen name="Add" component={Add} />
+        <Stack.Screen name="Add2" component={Add2} />
+        <Stack.Screen name="Details" component={Details} />
+        <Stack.Screen name="Stats" component={Stats} />
       </Stack.Navigator>
     </NavigationContainer>
   );

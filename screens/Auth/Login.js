@@ -61,7 +61,7 @@ const Login = (props) => {
         position: "bottom",
         visibilityTime: 2000,
       });
-      setTimeout(() => props.navigation.navigate("App"), 2300);
+      setTimeout(() => props.navigation.navigate("Welcome"), 2300);
     }
     //navigation.navigate("Dashboard");
   };
