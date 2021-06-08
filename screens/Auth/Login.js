@@ -51,10 +51,11 @@ const Login = (props) => {
       return;
     }
     if (data.success && data.invalidData === false) {
-      props.setUser(data.token, data.accountType, data.username);
+      //props.setUser(data.token, data.accountType, data.username);
       await AsyncStorage.setItem("accountType", data.accountType);
       await AsyncStorage.setItem("username", data.username);
       await AsyncStorage.setItem("token", data.token);
+      await AsyncStorage.setItem("email", data.email);
       Toast.show({
         text1: "Autentificare reusita!",
         type: "success",

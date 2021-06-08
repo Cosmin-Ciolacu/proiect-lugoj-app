@@ -6,6 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   Platform,
+  Alert,
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { Ionicons } from "@expo/vector-icons";
@@ -18,7 +19,7 @@ import ProblemCard from "../../components/ProblemCard";
 import Button from "../../components/Button";
 import { convertStatus } from "../../core/utils";
 
-const MyProblems = () => {
+const MyProblems = (props) => {
   const [problems, setProblems] = useState([]);
   const [loadingObject, setLoadingObject] = useState({
     loading: false,
@@ -28,6 +29,16 @@ const MyProblems = () => {
   const [take] = useState(3);
   const [showMore, setShowMore] = useState(true);
   const [status, setStatus] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  useEffect(() => {
+    (async () => {
+      const username = await AsyncStorage.getItem("username");
+      setUsername(username);
+      const email = await AsyncStorage.getItem("email");
+      setEmail(email);
+    })();
+  }, []);
   useEffect(() => {
     (async () => {
       try {
@@ -73,8 +84,38 @@ const MyProblems = () => {
     props.navigation.navigate("Details", {
       problem,
     });
+  const deleteAccount = async () => {
+    Alert.alert("Stergere cont", "Sigur vrei sa stergi acest cont?", [
+      {
+        text: "Nu",
+        onPress: () => null,
+        style: "cancel",
+      },
+      {
+        text: "Da",
+        onPress: async () => {
+          await AsyncStorage.clear();
+          return props.navigation.navigate("Home");
+        },
+      },
+    ]);
+  };
   return (
     <View>
+      <View style={styles.userInfo}>
+        <Text style={styles.info}>Nume: {username}</Text>
+        <Text style={styles.info}>Email: {email}</Text>
+        <Button
+          onPress={() => deleteAccount()}
+          mode="contained"
+          style={{
+            backgroundColor: "white",
+            alignSelf: "flex-end",
+          }}
+        >
+          <Text style={{ color: "red" }}>Stergere cont</Text>
+        </Button>
+      </View>
       {/*  <Picker
           style={{ height: 50, width: 150 }}
           onValueChange={(value) => setStatus(value)}
@@ -140,6 +181,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
   },
+  userInfo: {
+    width: "100%",
+    height: 250,
+    padding: 20,
+    /* flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "space-between", */
+    backgroundColor: theme.colors.primary,
+  },
+  info: {
+    color: "white",
+    fontSize: 25,
+    textAlign: "center",
+  },
 });
 
 const pickerStyles = StyleSheet.create({
@@ -149,6 +204,7 @@ const pickerStyles = StyleSheet.create({
     backgroundColor: theme.colors.primary,
     color: "white",
     height: 50,
+    marginTop: 20,
   },
   inputAndroid: {
     fontSize: 20,
