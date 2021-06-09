@@ -52,10 +52,12 @@ const Login = (props) => {
     }
     if (data.success && data.invalidData === false) {
       //props.setUser(data.token, data.accountType, data.username);
-      await AsyncStorage.setItem("accountType", data.accountType);
-      await AsyncStorage.setItem("username", data.username);
-      await AsyncStorage.setItem("token", data.token);
-      await AsyncStorage.setItem("email", data.email);
+      if (!!data.accountType)
+        await AsyncStorage.setItem("accountType", data.accountType);
+      if (!!data.username)
+        await AsyncStorage.setItem("username", data.username);
+      if (!!data.token) await AsyncStorage.setItem("token", data.token);
+      if (!!data.email) await AsyncStorage.setItem("email", data.email);
       Toast.show({
         text1: "Autentificare reusita!",
         type: "success",

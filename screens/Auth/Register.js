@@ -25,7 +25,7 @@ const Register = ({ navigation }) => {
   const [username, setUsername] = useState({ value: "", error: "" });
   const [email, setEmail] = useState({ value: "", error: "" });
   const [password, setPassword] = useState({ value: "", error: "" });
-  const [accountType, setAccountType] = useState({ value: "", error: "" });
+  const [accountType, setAccountType] = useState({ value: "user", error: "" });
 
   const register = async () => {
     const usernameError = usernameValidator(username.value);
@@ -103,7 +103,7 @@ const Register = ({ navigation }) => {
         secureTextEntry
       />
 
-      <View
+      {/* <View
         style={{
           width: "100%",
           justifyContent: "center",
@@ -136,7 +136,7 @@ const Register = ({ navigation }) => {
             <Picker.Item label="Utilizator" value="user" />
           </PickerIOS>
         )}
-      </View>
+      </View> */}
 
       <Button mode="contained" onPress={register}>
         Creare Cont

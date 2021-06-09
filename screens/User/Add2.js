@@ -31,9 +31,6 @@ const Add2 = (props) => {
     loading: false,
     text: "",
   });
-  useEffect(() => {
-    (async () => {})();
-  }, []);
   const getLocation = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -148,7 +145,6 @@ const Add2 = (props) => {
       loading: true,
       text: "Se salveaza sesizarea",
     });
-    console.log(category);
     const res = await axiosInstance.post(
       "/main/add-problem",
       {
