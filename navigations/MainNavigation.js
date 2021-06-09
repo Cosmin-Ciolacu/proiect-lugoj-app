@@ -7,19 +7,14 @@ import Home from "../screens/Auth/Home";
 import Login from "../screens/Auth/Login";
 import Register from "../screens/Auth/Register";
 import Welcome from "../screens/User/Welcome";
-import HomeAdmin from "../screens/Admin/HomeAdmin";
 import HomeUser from "../screens/User/HomeUser";
 import Add from "../screens/User/Add";
 import Details from "../screens/User/Details";
 import Add2 from "../screens/User/Add2";
 import Map from "../screens/User/Map";
-
-import AppNavigation from "./AppNavigation";
 import Stats from "../screens/User/Stats";
 import MyProblems from "../screens/User/MyProblems";
-
 const Stack = createStackNavigator();
-
 const MainNavigation = (props) => {
   const [token, setToken] = useState(null);
   useEffect(() => {
@@ -29,25 +24,6 @@ const MainNavigation = (props) => {
       setToken(token);
     })();
   }, []);
-  let screens = (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Home" component={Home} />
-      <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="Register" component={Register} />
-    </Stack.Navigator>
-  );
-  if (token !== null) {
-    screens = (
-      <Stack.Navigator>
-        <Stack.Screen name="Welcome" component={Welcome} />
-        <Stack.Screen name="Map" component={Map} />
-        <Stack.Screen name="HomeUser" component={HomeUser} />
-        <Stack.Screen name="Add" component={Add} />
-        <Stack.Screen name="Add2" component={Add2} />
-        <Stack.Screen name="Details" component={Details} />
-      </Stack.Navigator>
-    );
-  }
   return (
     <NavigationContainer>
       {/*  {screens} */}
