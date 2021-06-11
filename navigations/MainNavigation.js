@@ -14,6 +14,7 @@ import Add2 from "../screens/User/Add2";
 import Map from "../screens/User/Map";
 import Stats from "../screens/User/Stats";
 import MyProblems from "../screens/User/MyProblems";
+import Help from "../screens/User/Help";
 const Stack = createStackNavigator();
 const MainNavigation = (props) => {
   const [token, setToken] = useState(null);
@@ -62,6 +63,7 @@ const MainNavigation = (props) => {
         <Stack.Screen name="Add2" component={Add2} />
         <Stack.Screen name="Details" component={Details} />
         <Stack.Screen name="Stats" component={Stats} />
+        <Stack.Screen name="Help" component={Help} />
       </Stack.Navigator>
     </NavigationContainer>
   );
