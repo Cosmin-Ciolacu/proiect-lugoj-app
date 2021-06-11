@@ -4,9 +4,8 @@ import { View, Image, StyleSheet } from "react-native";
 import axiosInstance from "../../axios";
 import LoadingScreen from "../../components/LoadingScreen";
 import MapView, { Marker } from "react-native-maps";
-import { getIconByCategoryName } from "../../core/categories";
+import { getIconByCategoryName, getColorByStatus } from "../../core/categories";
 import * as Location from "expo-location";
-import { getColorByStatus } from "../../core/categories";
 
 const Map = (props) => {
   const [locations, setLocations] = useState([]);

@@ -50,7 +50,11 @@ const MainNavigation = (props) => {
           name="Register"
           component={Register}
         />
-        <Stack.Screen name="Welcome" component={Welcome} />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Welcome"
+          component={Welcome}
+        />
         <Stack.Screen name="Map" component={Map} />
         <Stack.Screen name="HomeUser" component={HomeUser} />
         <Stack.Screen name="MyProblems" component={MyProblems} />

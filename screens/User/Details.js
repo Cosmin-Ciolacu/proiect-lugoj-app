@@ -134,6 +134,7 @@ const Details = (props) => {
           >
             <Marker
               coordinate={{ latitude: problem.lat, longitude: problem.lng }}
+              pinColor={getColorByStatus(problem.status, problem.category)}
             />
           </MapView>
         </View>
